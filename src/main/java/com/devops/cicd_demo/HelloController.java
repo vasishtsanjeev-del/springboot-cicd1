@@ -9,7 +9,8 @@ public class HelloController {
     @GetMapping("/hello")
     public String hello() {
 
-        return "Hello from DevOps CI/CD Pipeline";
+        return "WEBHOOK CI/CD SUCCESS";
+
 
     }
 }
