@@ -2,7 +2,26 @@ pipeline {
 
     agent any
 
+    parameters {
+
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['DEV', 'QA', 'PROD'],
+            description: 'Choose deployment environment'
+        )
+
+    }
+
     stages {
+
+        stage('Environment Info') {
+
+            steps {
+
+                echo "Selected Environment: ${params.ENVIRONMENT}"
+
+            }
+        }
 
         stage('Build JAR') {
 
@@ -32,11 +51,33 @@ pipeline {
 
             steps {
 
-                echo 'Deploying Container'
+                script {
 
-                sh 'docker rm -f springboot-container || true'
+                    if (params.ENVIRONMENT == 'DEV') {
 
-                sh 'docker run -d --name springboot-container -p 8084:8080 springboot-cicd'
+                        sh 'docker rm -f springboot-dev || true'
+
+                        sh 'docker run -d --name springboot-dev -p 8084:8080 springboot-cicd'
+
+                    }
+
+                    else if (params.ENVIRONMENT == 'QA') {
+
+                        sh 'docker rm -f springboot-qa || true'
+
+                        sh 'docker run -d --name springboot-qa -p 8085:8080 springboot-cicd'
+
+                    }
+
+                    else {
+
+                        sh 'docker rm -f springboot-prod || true'
+
+                        sh 'docker run -d --name springboot-prod -p 8086:8080 springboot-cicd'
+
+                    }
+
+                }
 
             }
         }
