@@ -9,7 +9,7 @@ public class HelloController {
     @GetMapping("/hello")
     public String hello() {
 
-        return "WEBHOOK CI/CD SUCCESS 1";
+        return "testing jenkins params";
 
 
     }
