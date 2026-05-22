@@ -14,6 +14,8 @@ pipeline {
         QA_PORT = "8085"
         PROD_PORT = "8086"
 
+        GITHUB_PAT = credentials('github-pat')
+
     }
 
     parameters {
@@ -28,7 +30,7 @@ pipeline {
 
     stages {
 
-        stage('Environment Info') {
+        stage('Environment Information') {
 
             steps {
 
@@ -37,9 +39,31 @@ pipeline {
             }
         }
 
+        stage('Checkout Source Code') {
+
+            steps {
+
+                echo 'Checking out source code from GitHub'
+
+                checkout scm
+
+            }
+        }
+
+        stage('Credentials Test') {
+
+            steps {
+
+                echo 'GitHub credentials loaded successfully'
+
+            }
+        }
+
         stage('Build JAR') {
 
             steps {
+
+                echo 'Building Spring Boot Application'
 
                 sh 'chmod +x mvnw'
 
@@ -51,6 +75,8 @@ pipeline {
         stage('Build Docker Image') {
 
             steps {
+
+                echo 'Building Docker Image'
 
                 sh 'docker build -t ${APP_NAME} .'
 
@@ -65,6 +91,8 @@ pipeline {
 
                     if (params.ENVIRONMENT == 'DEV') {
 
+                        echo 'Deploying to DEV Environment'
+
                         sh 'docker rm -f ${DEV_CONTAINER} || true'
 
                         sh 'docker run -d --name ${DEV_CONTAINER} -p ${DEV_PORT}:8080 ${APP_NAME}'
@@ -73,6 +101,8 @@ pipeline {
 
                     else if (params.ENVIRONMENT == 'QA') {
 
+                        echo 'Deploying to QA Environment'
+
                         sh 'docker rm -f ${QA_CONTAINER} || true'
 
                         sh 'docker run -d --name ${QA_CONTAINER} -p ${QA_PORT}:8080 ${APP_NAME}'
@@ -80,6 +110,8 @@ pipeline {
                     }
 
                     else {
+
+                        echo 'Deploying to PROD Environment'
 
                         sh 'docker rm -f ${PROD_CONTAINER} || true'
 
@@ -93,4 +125,27 @@ pipeline {
         }
 
     }
+
+    post {
+
+        success {
+
+            echo 'Pipeline executed successfully'
+
+        }
+
+        failure {
+
+            echo 'Pipeline execution failed'
+
+        }
+
+        always {
+
+            echo 'Pipeline execution completed'
+
+        }
+
+    }
+
 }
