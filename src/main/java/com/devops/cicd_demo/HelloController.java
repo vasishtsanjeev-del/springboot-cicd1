@@ -9,7 +9,7 @@ public class HelloController {
     @GetMapping("/hello")
     public String hello() {
 
-        return "testing jenkins params";
+        return "added env params";
 
 
     }
