@@ -9,10 +9,8 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
 
         DEV_CONTAINER = "springboot-dev"
-        PROD_CONTAINER = "springboot-prod"
 
         DEV_PORT = "8084"
-        PROD_PORT = "8086"
 
         GITHUB_PAT = credentials('github-pat')
 
@@ -24,7 +22,7 @@ pipeline {
 
             steps {
 
-                echo 'Starting Production Style CI/CD Pipeline'
+                echo 'Starting CI/CD Pipeline'
 
             }
         }
@@ -99,9 +97,7 @@ pipeline {
             }
         }
 
-       
-
-   
+    }
 
     post {
 
