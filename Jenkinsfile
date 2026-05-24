@@ -6,6 +6,8 @@ pipeline {
 
         APP_NAME = "springboot-cicd"
 
+        IMAGE_TAG = "${BUILD_NUMBER}"
+
         DEV_CONTAINER = "springboot-dev"
         PROD_CONTAINER = "springboot-prod"
 
@@ -31,7 +33,7 @@ pipeline {
 
             steps {
 
-                echo 'Checking out source code'
+                echo 'Checking out source code from GitHub'
 
                 checkout scm
 
@@ -43,6 +45,19 @@ pipeline {
             steps {
 
                 echo 'GitHub credentials loaded successfully'
+
+            }
+        }
+
+        stage('Build Information') {
+
+            steps {
+
+                echo "Application Name: ${APP_NAME}"
+
+                echo "Docker Image Tag: ${IMAGE_TAG}"
+
+                echo "Jenkins Build Number: ${BUILD_NUMBER}"
 
             }
         }
@@ -64,9 +79,9 @@ pipeline {
 
             steps {
 
-                echo 'Building Docker Image'
+                echo 'Building Versioned Docker Image'
 
-                sh 'docker build -t ${APP_NAME} .'
+                sh 'docker build -t ${APP_NAME}:${IMAGE_TAG} .'
 
             }
         }
@@ -75,11 +90,11 @@ pipeline {
 
             steps {
 
-                echo 'Automatically Deploying to DEV'
+                echo 'Automatically Deploying to DEV Environment'
 
                 sh 'docker rm -f ${DEV_CONTAINER} || true'
 
-                sh 'docker run -d --name ${DEV_CONTAINER} -p ${DEV_PORT}:8080 ${APP_NAME}'
+                sh 'docker run -d --name ${DEV_CONTAINER} -p ${DEV_PORT}:8080 ${APP_NAME}:${IMAGE_TAG}'
 
             }
         }
@@ -107,7 +122,7 @@ pipeline {
 
                 sh 'docker rm -f ${PROD_CONTAINER} || true'
 
-                sh 'docker run -d --name ${PROD_CONTAINER} -p ${PROD_PORT}:8080 ${APP_NAME}'
+                sh 'docker run -d --name ${PROD_CONTAINER} -p ${PROD_PORT}:8080 ${APP_NAME}:${IMAGE_TAG}'
 
             }
         }
