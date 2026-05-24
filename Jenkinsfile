@@ -101,18 +101,12 @@ pipeline {
 
         stage('Production Approval') {
 
-            steps {
+    steps {
 
-                input {
+        input message: 'Approve Deployment to Production?', ok: 'Deploy PROD'
 
-                    message "Approve Deployment to Production?"
-
-                    ok "Deploy PROD"
-
-                }
-
-            }
-        }
+    }
+}
 
         stage('Deploy PROD') {
 
