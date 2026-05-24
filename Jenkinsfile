@@ -99,29 +99,9 @@ pipeline {
             }
         }
 
-        stage('Production Approval') {
+       
 
-    steps {
-
-        input message: 'Approve Deployment to Production?', ok: 'Deploy PROD'
-
-    }
-}
-
-        stage('Deploy PROD') {
-
-            steps {
-
-                echo 'Deploying to Production Environment'
-
-                sh 'docker rm -f ${PROD_CONTAINER} || true'
-
-                sh 'docker run -d --name ${PROD_CONTAINER} -p ${PROD_PORT}:8080 ${APP_NAME}:${IMAGE_TAG}'
-
-            }
-        }
-
-    }
+   
 
     post {
 
