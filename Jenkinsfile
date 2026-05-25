@@ -13,6 +13,8 @@ pipeline {
         DEV_PORT = "8084"
 
         GITHUB_PAT = credentials('github-pat')
+       
+        DOCKERHUB_USERNAME = "san91"
 
     }
 
@@ -128,6 +130,31 @@ pipeline {
 
             }
         }
+
+           stage('Push Docker Image') {
+
+    steps {
+
+        echo 'Logging into DockerHub'
+
+        withCredentials([usernamePassword(
+
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+
+        )]) {
+
+            sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+            sh 'docker tag ${APP_NAME}:${IMAGE_TAG} ${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}'
+
+            sh 'docker push ${DOCKERHUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}'
+
+        }
+
+    }
+}
 
         stage('Deploy DEV') {
 
