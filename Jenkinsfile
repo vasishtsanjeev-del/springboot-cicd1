@@ -72,6 +72,40 @@ pipeline {
 
             }
         }
+         
+         stage('Parallel Checks') {
+
+    parallel {
+
+        stage('Code Check') {
+
+            steps {
+
+                echo 'Running Code Validation'
+
+            }
+        }
+
+        stage('Security Check') {
+
+            steps {
+
+                echo 'Running Security Validation'
+
+            }
+        }
+
+        stage('Quality Check') {
+
+            steps {
+
+                echo 'Running Quality Validation'
+
+            }
+        }
+
+    }
+}
         
          stage('Archive Artifact') {
 
