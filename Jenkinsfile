@@ -73,6 +73,18 @@ pipeline {
 
     }
 }
+      
+       stage('Approval Gate') {
+
+    steps {
+
+        input(
+            message: "Deploy to ${params.ENVIRONMENT} ?",
+            ok: "Approve"
+        )
+
+    }
+}
 
         stage('Build JAR') {
 
