@@ -61,6 +61,18 @@ pipeline {
 
             }
         }
+        stage('Parameter Information') {
+
+    steps {
+
+        echo "Environment: ${params.ENVIRONMENT}"
+
+        echo "Version: ${params.VERSION}"
+
+        echo "Deploy Enabled: ${params.DEPLOY}"
+
+    }
+}
 
         stage('Build JAR') {
 
