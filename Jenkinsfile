@@ -1,3 +1,4 @@
+@Library('company-library') _
 pipeline {
 
     agent { label 'docker-agent' }
@@ -28,6 +29,14 @@ pipeline {
 
             }
         }
+
+         stage('Shared Library Test') {
+    steps {
+        script {
+            sayHello()
+        }
+    }
+}
 
         stage('Checkout Source Code') {
 
